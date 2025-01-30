@@ -1,13 +1,14 @@
 import requests
 import logging
 from flask import Flask, jsonify
+from db import init_db, insert_stock_price
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-@app.route('/api/v1/ibm', methods=['GET'])
+@app.route('/api/v1/stock_prices', methods=['GET'])
 
 def get_data():
     symbol = input('Enter a stock symbol: ')
@@ -17,11 +18,13 @@ def get_data():
         request = url + api_key
         response = requests.get(request)
         logger.debug(f'Response completed with status code {response.status_code}')
-        return jsonify(response.json())
+        data = response.json()
+        return jsonify(data)
     except Exception as e:
         return logger.error(f'An error occurred: {e}')
 
 if __name__ == '__main__':
+    init_db()
     from waitress import serve
     logger.info('Starting the server...')
     try:
