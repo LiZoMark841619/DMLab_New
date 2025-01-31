@@ -1,23 +1,17 @@
-# Start your image with a node base image
-FROM node:18-alpine
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# The /app directory should act as the main application directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the app package and package-lock.json file
-COPY package*.json ./
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Copy local directories to the current local directory of our docker image (/app)
-COPY ./src ./src
-COPY ./public ./public
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install node packages, install serve, build the app, and remove dependencies at the end
-RUN npm install \
-    && npm install -g serve \
-    && npm run build \
-    && rm -fr node_modules
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
 
-EXPOSE 3000
-
-# Start the app using serve command
-CMD [ "serve", "-s", "build" ]
+# Run app.py when the container launches
+CMD ["python", "app.py"]
