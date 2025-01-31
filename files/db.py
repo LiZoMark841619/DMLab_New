@@ -5,14 +5,14 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 
 def get_connection():
-    logging.debug('Connecting to the database...')  # Debugging statement
+    logger.info('Connecting to the database...') # Debugging statement
     try:
         conn = pyodbc.connect(
         'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=localhost\SQLEXPRESS;'
         'DATABASE=master;'
         'Trusted_Connection=yes;')
-        logger.debug('Connected to the database')  # Debugging statement
+        logger.info('Connected to the database') # Debugging statement
         return conn
     except Exception as e:
         logger.error(f'Error connecting to the database: {e}')  # Debugging statement
@@ -25,20 +25,28 @@ def init_db():
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='stock_prices' AND xtype='U')
         CREATE TABLE stock_prices (
             id INT PRIMARY KEY IDENTITY(1,1),
-            column1 DATE,
-            column2 NVARCHAR(MAX),
-            column3 FLOAT,
-            column4 FLOAT
+            date_of_trade DATE,
+            stock_symbol NVARCHAR(MAX),
+            open_price FLOAT,
+            close_price FLOAT
         )
     '''
     cursor.execute(query)
     conn.commit()
     cursor.close()
     conn.close()
-    logging.debug("Table 'stock_prices' created successfully")  # Debugging statement
-    
+    logger.info("Table 'stock_prices' created successfully")  # Debugging statement
 
-def insert_stock_price(cursor, date, stock_symbol, open_price, close_price):
-    query = "INSERT INTO stock_prices (column1, column2, column3, column4) VALUES (?, ?, ?, ?)"
-    cursor.execute(query, (date, stock_symbol, open_price, close_price))
-    logger.info(f'Inserted stock price for {stock_symbol}.')
+def record_exists(cursor, date_of_trade, stock_symbol):
+    query = "SELECT COUNT(*) FROM stock_prices WHERE date_of_trade = ? AND stock_symbol = ?"
+    cursor.execute(query, (date_of_trade, stock_symbol))
+    count = cursor.fetchone()[0]
+    return count > 0
+
+def insert_stock_price(cursor, date_of_trade, stock_symbol, open_price, close_price):
+    if not record_exists(cursor, date_of_trade, stock_symbol):
+        query = "INSERT INTO stock_prices (date_of_trade, stock_symbol, open_price, close_price) VALUES (?, ?, ?, ?)"
+        cursor.execute(query, (date_of_trade, stock_symbol, open_price, close_price))
+        logger.info(f'Inserted stock price for {stock_symbol}.') # Debugging statement
+    else:
+        logger.info(f'Record for {stock_symbol} on {date_of_trade} already exists.')

@@ -20,7 +20,7 @@ def get_data():
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey='
         request = url + api_key
         response = requests.get(request)
-        logger.debug(f'Response completed with status code {response.status_code}')
+        logger.debug(f'Response completed with status code {response.status_code}') # Debugging statement
         data = response.json()
         
         if 'Weekly Time Series' in data:
@@ -38,7 +38,6 @@ def get_data():
             cursor.close()
             connection.close()
             logger.info('Transaction committed and connection closed. ')
-            # return jsonify({'message': 'Data inserted successfully'}), 200
         else:
             logger.error('No weekly data found in the response')
         
@@ -50,8 +49,8 @@ def get_data():
 if __name__ == '__main__':
     init_db()
     from waitress import serve
-    logger.info('Starting the server...')
+    logger.info('Starting the server...') # Debugging statement
     try:
         serve(app, host="0.0.0.0", port=8000)
     except InterruptedError:
-        logger.info('Stopping the server...')
+        logger.info('Stopping the server...') # Debugging statement
