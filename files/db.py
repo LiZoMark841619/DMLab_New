@@ -25,9 +25,10 @@ def init_db():
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='stock_prices' AND xtype='U')
         CREATE TABLE stock_prices (
             id INT PRIMARY KEY IDENTITY(1,1),
-            column1 NVARCHAR(MAX),
-            column2 FLOAT,
-            column3 DATE
+            column1 DATE,
+            column2 NVARCHAR(MAX),
+            column3 FLOAT,
+            column4 FLOAT
         )
     '''
     cursor.execute(query)
@@ -37,7 +38,7 @@ def init_db():
     logging.debug("Table 'stock_prices' created successfully")  # Debugging statement
     
 
-def insert_stock_price(cursor, stock_symbol, price, date):
-    query = "INSERT INTO stock_prices (column1, column2, column3) VALUES (?, ?, ?)"
-    cursor.execute(query, (stock_symbol, price, date))
+def insert_stock_price(cursor, date, stock_symbol, open_price, close_price):
+    query = "INSERT INTO stock_prices (column1, column2, column3, column4) VALUES (?, ?, ?, ?)"
+    cursor.execute(query, (date, stock_symbol, open_price, close_price))
     logger.info(f'Inserted stock price for {stock_symbol}.')

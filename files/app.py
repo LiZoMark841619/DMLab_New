@@ -29,8 +29,9 @@ def get_data():
             cursor = connection.cursor()
             
             for date, values in weekly_data.items():
-                price = values.get('4. close')
-                insert_stock_price(cursor, symbol, price, date)
+                open_price = values.get('1. open')
+                close_price = values.get('4. close')
+                insert_stock_price(cursor, date, symbol, open_price, close_price)
                 logger.info(f'Inserted stock price for {symbol} on {date}')
                 
             connection.commit()
