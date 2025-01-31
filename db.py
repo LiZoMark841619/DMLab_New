@@ -11,7 +11,9 @@ def get_connection():
         'DRIVER={ODBC Driver 17 for SQL Server};'
         'SERVER=localhost\SQLEXPRESS;'
         'DATABASE=master;'
-        'Trusted_Connection=yes;')
+        'Trusted_Connection=yes;'
+        'Connection Timeout=30;'
+        )
         logger.info('Connected to the database') # Debugging statement
         return conn
     except Exception as e:
