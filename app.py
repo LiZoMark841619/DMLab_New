@@ -1,10 +1,10 @@
+import os
 import requests
 import logging
 import plotly.graph_objects as go
 from waitress import serve
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from db import get_connection, init_db, insert_stock_price
 
 load_dotenv()
@@ -13,28 +13,17 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = 'username'
-jwt = JWTManager(app)
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
-    if username == 'admin' and password == 'password':
-        access_token = create_access_token(identity=username)
-        return jsonify(access_token=access_token)
-    else:
-        return jsonify({'error': 'Invalid username or password'}), 401
 
 @app.route('/api/v1/stock_prices', methods=['GET'])
-@jwt_required()
 def fetch_data():
     symbol = request.args.get('symbol')
     if not symbol:
         return jsonify({'error': 'Stock symbol is required'}), 400
 
-    api_key = 'ML7626K7U6N2BGXZ'
+    api_key = os.getenv('API_KEY')
+    if not api_key:
+        return jsonify({'error': 'API key is required'}), 500
+
     try:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey='
         endpoint = url + api_key
@@ -66,7 +55,6 @@ def fetch_data():
         return jsonify({'error': 'An error occurred'}), 500
 
 @app.route('/api/v1/stock_prices/plot', methods=['GET'])
-@jwt_required()
 def make_a_plot():
     symbol = request.args.get('symbol')
     if not symbol:
