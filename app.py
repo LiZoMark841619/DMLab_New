@@ -1,6 +1,6 @@
 import requests
 import logging
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from db import get_connection, init_db, insert_stock_price
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -11,15 +11,15 @@ app = Flask(__name__)
 @app.route('/api/v1/stock_prices', methods=['GET'])
 
 def get_data():
-    symbol = input('Enter a stock symbol: ')
+    symbol = request.args.get('symbol')
     if not symbol:
         return jsonify({'error': 'Stock symbol is required'}), 400
     
     api_key = 'ML7626K7U6N2BGXZ'
     try:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey='
-        request = url + api_key
-        response = requests.get(request)
+        endpoint = url + api_key
+        response = requests.get(endpoint)
         logger.debug(f'Response completed with status code {response.status_code}') # Debugging statement
         data = response.json()
         

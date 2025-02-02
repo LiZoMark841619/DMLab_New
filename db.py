@@ -1,20 +1,26 @@
 import pyodbc
 import logging
+import os
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s, - %(message)s')
 logger = logging.getLogger(__name__)
 
 def get_connection():
-    logger.info('Connecting to the database...') # Debugging statement
+    logger.info('Connecting to the database...')  # Debugging statement
     try:
+        server = os.getenv("DATABASE_SERVER", "sql_server")
+        database = os.getenv("DATABASE_NAME", "master")
+        uid = os.getenv("UID", "sa")
+        pwd = os.getenv("PWD", "DMLab_New123")
         conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 17 for SQL Server};'
-        'SERVER=localhost\SQLEXPRESS;'
-        'DATABASE=master;'
-        'Trusted_Connection=yes;'
-        'Connection Timeout=30;'
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};'
+            f'SERVER={server};'
+            f'DATABASE={database};'
+            f'UID={uid};'
+            f'PWD={pwd};'
+            'Connection Timeout=30;'
         )
-        logger.info('Connected to the database') # Debugging statement
+        logger.info('Connected to the database')  # Debugging statement
         return conn
     except Exception as e:
         logger.error(f'Error connecting to the database: {e}')  # Debugging statement

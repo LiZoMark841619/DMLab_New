@@ -1,9 +1,27 @@
-version: '3.9'  # Optional, but recommended for clarity
-
 services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server
+    container_name: sql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=DMLab_New123
+    ports:
+      - "1433:1433"
+    networks:
+      - my_network
+
   web:
     build: .
     ports:
       - "8000:8000"
     environment:
-      - FLASK_ENV=development
+      - DATABASE_SERVER=sql_server
+      - DATABASE_NAME=master
+      - UID=sa
+      - PWD=DMLab_New123
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge

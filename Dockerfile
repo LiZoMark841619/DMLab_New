@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /DMLab_New
+WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,20 +11,24 @@ RUN apt-get update && apt-get install -y \
     unixodbc-dev \
     curl \
     apt-transport-https \
-    gnupg
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install the Microsoft ODBC Driver 17 for SQL Server
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
-    ACCEPT_EULA=Y apt-get install -y msodbcsql17
+    ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the current directory contents into the container at /app
+COPY . /app
 
 # Install Python dependencies
-COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code
-COPY . .
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
 
-# Command to run the application
+# Run app.py when the container launches
 CMD ["python", "app.py"]
