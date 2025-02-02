@@ -3,3 +3,4 @@ requests==2.25.1
 pyodbc==4.0.30
 Werkzeug==2.0.1
 waitress==2.0.0
+plotly==5.3.1
