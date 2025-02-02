@@ -7,13 +7,17 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from db import get_connection, init_db, insert_stock_price
 
+# Load environment variables from .env file
 load_dotenv()
 
+# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Initialize Flask app
 app = Flask(__name__)
 
+# Define route to fetch stock prices
 @app.route('/api/v1/stock_prices', methods=['GET'])
 def fetch_data():
     symbol = request.args.get('symbol')
@@ -54,11 +58,11 @@ def fetch_data():
         logger.error(f'An error occurred: {e}')
         return jsonify({'error': 'An error occurred'}), 500
 
+# Define route to plot stock prices
 @app.route('/api/v1/stock_prices/plot', methods=['GET'])
 def make_a_plot():
     symbol = request.args.get('symbol')
     if not symbol:
-        logger.error('Stock symbol is required')
         return jsonify({'error': 'Stock symbol is required'}), 400
     
     connection = get_connection()
@@ -82,6 +86,7 @@ def make_a_plot():
     plot_html = fig.to_html(full_html=False)
     return plot_html
 
+# Initialize the database and start the server
 if __name__ == '__main__':
     init_db()
     logger.info('Starting the server...') # Debugging statement

@@ -3,6 +3,7 @@ import pyodbc
 import logging
 import os
 
+# Load environment variables from .env file
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s, - %(message)s')
 logger = logging.getLogger(__name__)
