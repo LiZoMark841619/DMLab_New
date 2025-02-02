@@ -1,33 +1,23 @@
-import os
 import requests
 import logging
 import plotly.graph_objects as go
 from waitress import serve
-from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from db import get_connection, init_db, insert_stock_price
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Define route to fetch stock prices
 @app.route('/api/v1/stock_prices', methods=['GET'])
+
 def fetch_data():
     symbol = request.args.get('symbol')
     if not symbol:
         return jsonify({'error': 'Stock symbol is required'}), 400
 
-    api_key = os.getenv('API_KEY')
-    if not api_key:
-        return jsonify({'error': 'API key is required'}), 500
-
+    api_key = 'ML7626K7U6N2BGXZ'
     try:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey='
         endpoint = url + api_key
@@ -58,11 +48,12 @@ def fetch_data():
         logger.error(f'An error occurred: {e}')
         return jsonify({'error': 'An error occurred'}), 500
 
-# Define route to plot stock prices
 @app.route('/api/v1/stock_prices/plot', methods=['GET'])
+
 def make_a_plot():
     symbol = request.args.get('symbol')
     if not symbol:
+        logger.error('Stock symbol is required')
         return jsonify({'error': 'Stock symbol is required'}), 400
     
     connection = get_connection()
@@ -86,11 +77,10 @@ def make_a_plot():
     plot_html = fig.to_html(full_html=False)
     return plot_html
 
-# Initialize the database and start the server
 if __name__ == '__main__':
     init_db()
     logger.info('Starting the server...') # Debugging statement
     try:
-        serve(app, host="0.0.0.0", port=8000)
+        serve(app, host="0.0.0.0", port=5000)
     except InterruptedError:
         logger.info('Stopping the server...') # Debugging statement
