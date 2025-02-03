@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main # Change this to your main branch
+      - main
 
 jobs:
   build:
@@ -35,6 +35,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Install Heroku CLI
+      run: |
+        curl https://cli-assets.heroku.com/install.sh | sh
 
     - name: Set up Heroku environment
       run: |
