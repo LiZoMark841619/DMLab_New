@@ -1,59 +1,76 @@
-# DMLab_New
+# DMLab Project
 
 ## Overview
-DMLab_New is a Flask-based web application that fetches and stores stock prices from the Alpha Vantage API and provides endpoints to retrieve and plot the data.
+DMLab is a Flask-based web application for fetching and visualizing stock prices.
 
-## Setup Instructions
+## Features
+- Fetch stock prices from an external API
+- Store data in SQL Server
+- Visualize data using Plotly
 
-1. Clone the repository:
-    ```sh
-    git clone <repository_url>
+## Setup Options
+
+### Option 1: Clone Repository and Run Locally
+
+1. **Clone the repository**
+    ```bash
+    git clone https://github.com/LiZoMark841619/DMLab_New.git
     cd DMLab_New
     ```
 
-2. Create and activate a virtual environment:
-    ```sh
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `source venv\Scripts\activate`
+2. **Create a virtual environment**
+    ```bash
+    python -m venv venv_new
+    source venv_new/bin/activate  # On Windows use `source venv_new\Scripts\activate`
     ```
 
-3. Install the required dependencies:
-    ```sh
+3. **Install dependencies**
+    ```bash
     pip install -r requirements.txt
     ```
 
-4. Create a `.env` file in the project root and add your Alpha Vantage API key:
-    ```env
-    API_KEY=your_alpha_vantage_api_key
+4. **Set up environment variables**
+    ```bash
+    cp .env.example .env
+    # Edit .env file to add your API_KEY and DB_PASSWORD
     ```
 
-5. Initialize the database:
-    ```sh
-    python -c "from db import init_db; init_db()"
+5. **Run the application**
+    ```bash
+    flask run
     ```
 
-6. Run the application:
-    ```sh
-    python app.py
+### Option 2: Using Docker
+
+1. **Clone the repository**
+    ```bash
+    git clone https://github.com/LiZoMark841619/DMLab_New.git
+    cd DMLab_New
     ```
+
+2. **Set up environment variables**
+    ```bash
+    cp .env.example .env
+    # Edit .env file to add your API_KEY and DB_PASSWORD
+    ```
+
+3. **Build and run the Docker containers**
+    ```bash
+    docker-compose up -d --build
+    ```
+
+4. **Access the application**
+    - Open your browser and go to `http://localhost:5000`
 
 ## API Endpoints
-
-### Fetch Stock Prices
-- **URL:** `/api/v1/stock_prices`
-- **Method:** `GET`
-- **Query Parameters:**
-  - `symbol` (required): The stock symbol to fetch data for.
-- **Response:**
-  - JSON object containing the stock prices or an error message.
-
-### Plot Stock Prices
-- **URL:** `/api/v1/stock_prices/plot`
-- **Method:** `GET`
-- **Query Parameters:**
-  - `symbol` (required): The stock symbol to plot data for.
-- **Response:**
-  - HTML content of the plot or an error message.
+- `/api/v1/stock_prices?symbol=AAPL` - Fetch stock prices for a given symbol
+- `/api/v1/stock_prices/plot?symbol=AAPL` - Fetch and plot stock prices for a given symbol
 
 ## Logging
 The application uses Python's built-in logging module to log debug and error messages. Logs are printed to the console.
+
+## Contributing
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4. Submit a pull request
