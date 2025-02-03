@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main
+      - main # Change this to your main branch
 
 jobs:
   build:
