@@ -45,6 +45,11 @@ jobs:
         echo "HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }}" >> $GITHUB_ENV
         echo "HEROKU_EMAIL=${{ secrets.HEROKU_EMAIL }}" >> $GITHUB_ENV
 
+    - name: Debug Environment Variables
+      run: |
+        echo "HEROKU_API_KEY=$HEROKU_API_KEY"
+        echo "HEROKU_EMAIL=$HEROKU_EMAIL"
+
     - name: Login to Heroku
       run: |
         echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" > ~/.netrc
