@@ -129,7 +129,7 @@ celerybeat.pid
 
 # Environments
 .vscode/
-venv/
+venv_new/
 __pycache__/
 *.pyc
 .env
