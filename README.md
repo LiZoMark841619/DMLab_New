@@ -14,7 +14,7 @@ DMLab_New is a Flask-based web application that fetches and stores stock prices 
 2. Create and activate a virtual environment:
     ```sh
     python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    source venv/bin/activate  # On Windows use `source venv\Scripts\activate`
     ```
 
 3. Install the required dependencies:
@@ -57,6 +57,3 @@ DMLab_New is a Flask-based web application that fetches and stores stock prices 
 
 ## Logging
 The application uses Python's built-in logging module to log debug and error messages. Logs are printed to the console.
-
-## License
-This project is licensed under the MIT License.
