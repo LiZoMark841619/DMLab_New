@@ -32,7 +32,7 @@ DMLab is a Flask-based web application for fetching and visualizing stock prices
 4. **Set up environment variables**
     ```bash
     cp .env.example .env
-    # Edit .env file to add your API_KEY and DB_PASSWORD
+    # Edit .env file to add your API_KEY, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME
     ```
 
 5. **Run the application**
@@ -51,7 +51,7 @@ DMLab is a Flask-based web application for fetching and visualizing stock prices
 2. **Set up environment variables**
     ```bash
     cp .env.example .env
-    # Edit .env file to add your API_KEY and DB_PASSWORD
+    # Edit .env file to add your API_KEY, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, and DB_NAME
     ```
 
 3. **Build and run the Docker containers**
