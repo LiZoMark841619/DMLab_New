@@ -56,6 +56,10 @@ jobs:
         echo "machine git.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> ~/.netrc
         chmod 600 ~/.netrc
 
+    - name: Set Heroku Stack to Container
+      run: |
+        heroku stack:set container -a dmlabstocks
+
     - name: Deploy to Heroku
       run: |
         heroku container:login
