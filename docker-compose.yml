@@ -21,7 +21,7 @@ services:
       DB_PORT: 1433
       DB_USER: sa
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: master
+      DB_NAME: ${DB_NAME}
     depends_on:
       - db
     networks:
