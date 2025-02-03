@@ -1,3 +1,4 @@
+import os
 import requests
 import logging
 import plotly.graph_objects as go
@@ -11,16 +12,15 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 @app.route('/api/v1/stock_prices', methods=['GET'])
-
 def fetch_data():
     symbol = request.args.get('symbol')
     if not symbol:
         return jsonify({'error': 'Stock symbol is required'}), 400
-
-    api_key = 'ML7626K7U6N2BGXZ'
+    
+    apikey = os.getenv('API_KEY')
     try:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={symbol}&apikey='
-        endpoint = url + api_key
+        endpoint = url + apikey
         response = requests.get(endpoint)
         logger.debug(f'Response completed with status code {response.status_code}') # Debugging statement
         data = response.json()
@@ -49,7 +49,6 @@ def fetch_data():
         return jsonify({'error': 'An error occurred'}), 500
 
 @app.route('/api/v1/stock_prices/plot', methods=['GET'])
-
 def make_a_plot():
     symbol = request.args.get('symbol')
     if not symbol:
@@ -64,6 +63,7 @@ def make_a_plot():
     if not rows:
         logger.error(f'No data found for {symbol}')
         return jsonify({'error': f'No data found for {symbol}'}), 404
+
     dates = [r[0] for r in rows]
     open_prices = [r[1] for r in rows]
     close_prices = [r[2] for r in rows]
@@ -73,9 +73,7 @@ def make_a_plot():
     fig = go.Figure(data=[go.Scatter(x=dates, y=open_prices, mode='lines', name='Open Prices')])
     fig.add_trace(go.Scatter(x=dates, y=close_prices, mode='lines', name='Close Prices'))
     fig.update_layout(title=f'{symbol} stock price', xaxis_title='Date', yaxis_title='Price')
-    
-    plot_html = fig.to_html(full_html=False)
-    return plot_html
+    return fig.to_html(full_html=False)
 
 if __name__ == '__main__':
     init_db()
