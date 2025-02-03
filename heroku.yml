@@ -1,0 +1,10 @@
+build:
+  docker:
+    web: Dockerfile
+
+release:
+  command:
+    - python app.py
+
+run:
+  web: gunicorn app:app --bind 0.0.0.0:$PORT
