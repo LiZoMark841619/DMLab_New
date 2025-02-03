@@ -2,10 +2,12 @@ import os
 import requests
 import logging
 import plotly.graph_objects as go
+from dotenv import load_dotenv
 from waitress import serve
 from flask import Flask, jsonify, request
 from db import get_connection, init_db, insert_stock_price
 
+load_dotenv()
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
